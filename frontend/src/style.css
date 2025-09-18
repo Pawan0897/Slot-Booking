@@ -1,0 +1,131 @@
+@import "tailwindcss";
+:root{
+  --calender-days:"";
+  --title-calender:rgb(159, 158, 158) !important;
+  --fc-button-bg-color: #030712;
+}
+
+/* ************** CAlender */
+/* Change all day cell text */
+.fc-daygrid-day-number {
+  color: #333;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* Style today’s background */
+.fc-day-today {
+  background-color: #e0f7fa !important;
+  color: red;
+}
+
+/* Weekend background */
+.fc-day-sat, .fc-day-sun {
+  background-color: #f0f0f0;
+}
+.react-datepicker__day--selected, .react-datepicker__day--in-selecting-range, .react-datepicker__day--in-range, .react-datepicker__month-text--selected, .react-datepicker__month-text--in-selecting-range, .react-datepicker__month-text--in-range, .react-datepicker__quarter-text--selected, .react-datepicker__quarter-text--in-selecting-range, .react-datepicker__quarter-text--in-range, .react-datepicker__year-text--selected, .react-datepicker__year-text--in-selecting-range, .react-datepicker__year-text--in-range {
+    border-radius: 50%;
+    background-color: #216ba5;
+    color: #fff !important;
+}
+.fc .fc-daygrid-day-frame {
+    /* min-height: 100%; */
+    display: flex;
+    position: relative;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+}
+/* calender weak style */
+.fc .fc-col-header-cell-cushion
+
+ {
+    display: inline-block;
+    padding: 2px 4px;
+    text-decoration: none;
+}
+
+/* **************************************** Time.............. */
+.react-time-picker__wrapper{
+  border: none !important;
+}
+
+/********************* Active Link  */
+.active-link{
+  color:rgb(126, 16, 16) !important;
+}
+
+/* ************************* calender style */
+.contact-text{
+  color:rgb(159, 158, 158) !important;
+}
+/* calender date title */
+.fc .fc-toolbar-title {
+    font-size: 1.50em;
+     margin-left:10px;
+    color: orange;
+    /* margin: 0px; */
+}
+/* *************header border with background */
+ .fc ::after, .fc ::before {
+    box-sizing: border-box;
+    /* background-color: #030712; */
+}
+.fc-theme-standard td, .fc-theme-standard th {
+    /* border: 1px solid var(--fc-border-color); */
+    background-color: #0000;
+}
+.fc-theme-standard td, .fc-theme-standard th {
+    border: none;
+}
+.fc-day-sat, .fc-day-sun {
+    background-color: none !important;
+}
+.fc td, .fc th {
+    
+    /* background-color:#030712 !important; */
+}
+/* ***********border */
+.fc .fc-scrollgrid {
+  border:none
+
+}
+/* ************ Week days color */
+.fc .fc-col-header-cell-cushion{
+  color: var(--title-calender)
+}
+/* ****************** button color */
+.fc .fc-button-group > .fc-button {
+  background-color: #0000 ; 
+  border:none;
+  
+
+}
+/* ***************** */
+.fc-direction-ltr {
+    direction: ltr;
+    text-align: left;
+    padding: 20px 15px 18px 20px;
+}
+
+/* *********************** index clender tiner text */
+.timer > h5 , .timer > h6 {
+  color: #e0f7fa;
+}
+/****************************  */
+
+.fc .fc-daygrid-day.fc-day-today {
+  background-color: orange !important;
+  color: rgb(23, 21, 21) !important;
+  border-radius:6px;
+
+}
+.txt-org{
+   color: orange !important;
+}
+
+.fc-daygrid-day-number {
+    color: rgb(189, 189, 189);
+    font-weight: bold;
+    text-decoration: none;
+}
