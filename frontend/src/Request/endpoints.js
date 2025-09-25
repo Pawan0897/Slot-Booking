@@ -69,6 +69,6 @@ export const UserSelctSlot = async (body) => {
 
 /****************************************  User Se */
 
-export const BookedSlot = async (body) => {
+export const SlotBookedByUser = async (body) => {
     return await https.get("/user/getbookedslot", body)
 }

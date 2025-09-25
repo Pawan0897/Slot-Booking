@@ -1,14 +1,19 @@
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { BookedSlot, SlotAvail, UserSelctSlot } from "../../Request/endpoints";
+import {
+    SlotAvail,
+    SlotBookedByUser,
+    UserSelctSlot,
+} from "../../Request/endpoints";
 import moment from "moment";
 import interactionPlugin from "@fullcalendar/interaction";
 import { useState } from "react";
 import { IoTimeOutline } from "react-icons/io5";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import Swal from "sweetalert2"
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
 export default function Index() {
     // *************************************
     const [TimeSlot, setTimeSlot] = useState([]);
@@ -16,6 +21,7 @@ export default function Index() {
     const [openBox, SetopenBox] = useState(true);
 
     // :::::::: fromik values
+    const navigate = useNavigate();
 
     /*********************** click on time color change  */
     const [clickTime, setclickTime] = useState("");
@@ -33,7 +39,7 @@ export default function Index() {
 
     const slotBooked = useQuery({
         queryKey: ["bookedslot"],
-        queryFn: () => BookedSlot(),
+        queryFn: () => SlotBookedByUser(),
     });
 
     // ********************************************** TTime
@@ -82,47 +88,52 @@ export default function Index() {
         mutationFn: (value) => UserSelctSlot(value),
         onSuccess: (res) => {
             if (res?.data?.statuscode == 200) {
-                Swal.fire({
-                    title: res?.data?.message
-                })
-                console.log(res?.data, "qwqwqwwwwwwwwwwwwwwwwwwwwwwwwwwww");
-            }
+                SetopenBox(true);
 
+                Swal.fire({
+                    title: res?.data?.message,
+                    icon: "success",
+                });
+                setTimeSlot([])
+                navigate("/")
+
+            } else {
+                Swal.fire({
+                    title: res?.data?.message,
+                    icon: "info",
+                });
+            }
         },
     });
     //  ****************************** Get the booked slot
 
     //  ************************************************************************************** RND
-    const resvSlot = slotBooked?.data?.data?.data.map((item) => item) || [];
+    const resvSlot = slotBooked?.data?.data?.data?.map((item) => item) || [];
     console.log(resvSlot, ".l.l.l...lllll....", resvSlot);
     console.log(".........slotdata.......", sloted);
 
-    const isbook = resvSlot.flatMap((b) => {
+    const isbook = resvSlot?.flatMap((b) => {
         const st = b?.slotTime;
         if (!st) return [];
-
         const dateField = st.date;
         const timeField = st.time;
         if (!timeField || !dateField) return [];
-
         const dates = Array.isArray(dateField) ? dateField : [dateField];
         const matches = dates.some((d) => moment(d).format("YYYY-MM-DD"));
         return matches ? [timeField] : [];
     });
-    const booktime = isbook.flat()
-    // **************************************** Already Booked 
+
+    const booktime = isbook.flat();
+    // **************************************** Already Booked
     const AlreadyBooked = () => {
         Swal.fire({
             title: "Already Booked !!!",
             text: "Pleade Select onother Slot Time !!",
-            icon: "info"
-
-        })
-        setclickTime(" ")
-    }
-
+            icon: "info",
+        });
+        setclickTime(" ");
+    };
     console.log(clickTime, "asdfghjkl;");
-
     return (
         <>
             <div className="container">
@@ -151,13 +162,26 @@ export default function Index() {
                                     contentHeight="auto"
                                     themeSystem="bootstrap5"
                                     /************************** daty Click  */
-                                    dateClick={(date) => {
-                                        console.log("pkpkpkpkpk");
-                                        const dateformat = moment(date?.dateStr).format(
+                                    dateClick={(arg) => {
+                                        // ************************ Stop click the past date
+                                        const today = new Date().setHours(0, 0, 0, 0);
+                                        const pastdqy = new Date(arg.date).setHours(0, 0, 0, 0);
+
+                                        if (pastdqy < today) {
+                                            alert("this is not selectable");
+                                            return;
+                                        }
+                                        /*********************** Clickable dates started with functions */
+                                        const dateformat = moment(arg?.dateStr).format(
                                             "YYYY-MM-DD"
                                         );
-                                        TimeShow(dateformat);
-                                        setselectDate(dateformat);
+                                        // ********************* if slot available then booking the date
+                                        if (SlotData?.includes(dateformat)) {
+                                            TimeShow(dateformat);
+                                            setselectDate(dateformat);
+                                        } else {
+                                            alert("Booking Not Available !!!");
+                                        }
                                     }}
                                     /************************** End click  */
                                     /*********************************** Color Change */
@@ -184,6 +208,14 @@ export default function Index() {
                                             arg.el.style.webkitTextFillColor = "white";
                                         }
                                     }}
+                                    // c*************************** change color of past dat and not clickable
+                                    dayCellClassNames={(arg) => {
+                                        const pastday = new Date().setHours(0, 0, 0, 0);
+                                        const today = new Date(arg.date).setHours(0, 0, 0, 0);
+                                        if (today < pastday) {
+                                            return ["day-past"];
+                                        }
+                                    }}
                                     /****************************************** End Color Change ------ */
                                     selectMirror={true}
                                     dayMaxEvents={true}
@@ -205,35 +237,29 @@ export default function Index() {
                                     </div>
                                 ) : (
                                     TimeSlot.map((item) => {
-                                        const IsBooked = booktime.includes(item)
+                                        const IsBooked = booktime.includes(item);
                                         console.log(IsBooked, ";;;;;");
-
-
-
-
-
+                                        // ************************************** Start the html codeing
                                         return (
-
                                             <p
-                                                className={`border-1 cursor-pointer rounded-2xl px-3 py-2 text-center font-semibold   ${IsBooked ? "text-red-800  border-red-800" :
-                                                    clickTime == item
+                                                className={`border-1 cursor-pointer rounded-2xl px-3 py-2 text-center font-semibold   ${IsBooked
+                                                    ? "text-red-800  border-red-800"
+                                                    : clickTime == item
                                                         ? "txt-org border-orange-400"
                                                         : "border-zinc-300 text-zinc-300"
                                                     }`}
                                                 onClick={() => {
                                                     if (IsBooked == true) {
-                                                        AlreadyBooked()
-                                                        setclickTime(" ")
-
-                                                    }
-                                                    else {
-                                                        setclickTime(item)
+                                                        AlreadyBooked();
+                                                        setclickTime(" ");
+                                                    } else {
+                                                        setclickTime(item);
                                                     }
                                                 }}
                                             >
                                                 {item}
                                             </p>
-                                        )
+                                        );
                                     })
                                 )}
                             </div>
@@ -241,20 +267,17 @@ export default function Index() {
                             <button
                                 className="px-4 font-semibold mt-3 py-2 bg-orange-400 float-end rounded "
                                 onClick={() => {
-                                    if (clickTime == "" && selectDate == "") {
-                                        SetopenBox(true)
+                                    if (clickTime == "" || selectDate == "") {
+                                        SetopenBox(true);
                                         Swal.fire({
                                             title: "Slot Is Empty",
                                             text: "Please select date and Time ",
-                                            icon: "info"
-                                        })
+                                            icon: "info",
+                                        });
+                                    } else {
+                                        SetopenBox(false);
                                     }
-                                    else {
-                                        SetopenBox(false)
-                                    }
-                                }
-
-                                }
+                                }}
                             >
                                 Next
                             </button>
@@ -266,7 +289,7 @@ export default function Index() {
                             <div className="contact-detail  h-full w-full md:w-1/4">
                                 <div className=" h-full rounded-0 border-0">
                                     <h5 className="font-semibold text-orange-400 txt-org">
-                                        Contact US{" "}
+                                        Contact US
                                     </h5>
                                 </div>
                             </div>
@@ -363,6 +386,10 @@ export default function Index() {
                     </div>
                 )}
             </div>
+
+            {/* *********************************************************************************************************** */}
+
+
         </>
     );
 }

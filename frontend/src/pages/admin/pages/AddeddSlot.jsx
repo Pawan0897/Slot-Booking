@@ -52,13 +52,13 @@ export default function AddeddSlot() {
                                 <tr >
                                     <td><p>
                                         {slot.date}
-                                        </p>
-                                        </td>
-                                    <td>
-                                        <p>
+                                    </p>
+                                    </td>
+                                    <td >
+                                        <p className="">
                                             {slot.time.length > 0
-                                            ? slot.time.join(",     ")
-                                            : "No time slots"}
+                                                ? <button className="text-black font-semibold bg-orange-400 px-2 py-2">{slot.time.join(",       ")}</button>
+                                                : "No time slots"}
                                         </p>
                                     </td>
                                 </tr>

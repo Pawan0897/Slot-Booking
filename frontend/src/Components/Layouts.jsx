@@ -7,24 +7,25 @@ import AddeddSlot from '../pages/admin/pages/AddeddSlot'
 import Register from '../pages/Register'
 import OTPVerify from '../pages/OTPvarify'
 import Index from '../pages/user/Index'
+import BookedSlot from '../pages/user/BookedSlot'
+import { ProtectingRoute } from '../ProtectedRoute/ProtectingRoute'
+import AdminRoute from '../ProtectedRoute/AdminRoute'
 
 function Layouts() {
   return (
     <Routes>
       {/* <Route path='/admin' element={<Login />} /> */}
       {/* /*********************************************************** Admin routes */}
-      <Route path='/admin' element={<Admin />} />
-      <Route path='/addtime' element={<AddTime />} />
-      {/* <Route path="login" element={<Login} */}
-      {/* <Route path="/singup"></Route> */}
-      <Route path='/addeddslots' element={<AddeddSlot />}></Route>
+
+      <Route path="*" element={<ProtectingRoute />} >
+        <Route path='admin/*' element={<AdminRoute />} >
+        </Route>
+      </Route>
+
       {/* ************************ Signup login routes */}
       <Route path='/login' element={<Login />}></Route>
       <Route path='/otpverify' element={<OTPVerify />}></Route>
-      <Route path='/signup' element={<Register />}>
-
-
-      </Route>
+      <Route path='/signup' element={<Register />}></Route>
       <Route path='/' element={<Index />}></Route>
 
     </Routes>

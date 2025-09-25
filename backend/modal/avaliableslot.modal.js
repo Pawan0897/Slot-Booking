@@ -9,9 +9,9 @@ const avaliableslot = new Schema({
   time: {
     type: String,
   },
-  isBooked:{
-    type:Boolean,
-    default:false
+  isBooked: {
+    type: Boolean,
+    default: false
   },
   bookedBy: {
     type: mongoose.Types.ObjectId,
@@ -22,4 +22,8 @@ const avaliableslot = new Schema({
     ref: "admin",
   },
 });
+
+avaliableslot.virtual("datetime").get(() => {
+  return `${this.date} ${this.time}`
+})
 module.exports.AVALIABLESLOT = mongoose.model("avaliableslot", avaliableslot);

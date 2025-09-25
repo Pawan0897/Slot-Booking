@@ -153,6 +153,12 @@ function Admin() {
                   /************** *************************click The day button  */
                   dateClick={(date) => {
                     const datefor = moment(date?.dateStr).format("YYYY-MM-DD");
+                    // ************************* Not Click Past Date
+                    const pastDate = new Date(date.date).setHours(0, 0, 0, 0);
+                    const today = new Date().setHours(0, 0, 0, 0);
+                    if (pastDate < today) {
+                      return
+                    }
                     // ******************************* for checking that slot date is already added on db or not
                     if (innerSloteDate?.includes(datefor)) {
                       SetTimeModal(true);
@@ -183,6 +189,18 @@ function Admin() {
                       arg.el.style.webkitTextFillColor = "grey";
                     }
                   }}
+                  /****************************** back date not allowed */
+                  dayCellClassNames={(arg) => {
+                    const pastday = new Date(arg.date).setHours(0, 0, 0, 0);
+                    const today = new Date().setHours(0, 0, 0, 0)
+                    if (pastday < today) {
+                      return ['day-past']
+                    }
+
+
+                  }
+
+                  }
                   headerToolbar={{
                     left: "prev,next",
                     right: "title",

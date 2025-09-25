@@ -10,7 +10,7 @@ import { AddDetail, AddStatus, AddToken } from "../Redux/Reducer";
 import { status } from "./status";
 export default function Login() {
     const dispatch = useDispatch()
-    const navigate =useNavigate()
+    const navigate = useNavigate()
     // ***************************************************
     const formik = useFormik({
         initialValues: {
@@ -23,32 +23,31 @@ export default function Login() {
         }),
         onSubmit: (values) => {
             UserLogin.mutate(values)
-            
+
         },
     });
     /************************************ api handle */
     const UserLogin = useMutation({
-        mutationFn:(value) => AdminLogin(value),
-        onSuccess:(res) => {
-            if(res?.data?.statuscode == 200)
-            {
+        mutationFn: (value) => AdminLogin(value),
+        onSuccess: (res) => {
+            if (res?.data?.statuscode == 200) {
                 dispatch(AddToken(res?.data?.data?.token))
                 dispatch(AddDetail(res?.data?.data?.isActive))
                 dispatch(AddStatus(status?.Active))
-               
+
                 Swal.fire({
-                    title:`${res?.data?.message}`,
-                    icon:"success"
+                    title: `${res?.data?.message}`,
+                    icon: "success"
                 })
                 navigate('/admin')
             }
-            else{
+            else {
                 Swal.fire({
-                    title:`${res?.data?.message}`,
-                    icon:"info"
+                    title: `${res?.data?.message}`,
+                    icon: "info"
                 })
             }
-            
+
         }
     })
     return (

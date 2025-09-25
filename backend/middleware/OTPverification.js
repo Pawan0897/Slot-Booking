@@ -30,7 +30,7 @@ const OTPverification = async (email, res) => {
       </div>
       
     </div>
-  `
+  `,
         };
 
         tranporter.sendMail(mailOptions, async function (error, info) {
@@ -56,4 +56,10 @@ const OTPverification = async (email, res) => {
     }
 };
 
+
+
 module.exports = OTPverification;
+
+
+
+

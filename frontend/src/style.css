@@ -129,3 +129,8 @@
     font-weight: bold;
     text-decoration: none;
 }
+/* *************** past date custom */
+.day-past{
+  opacity: 0.4 !important;
+  pointer-events: none !important;
+}

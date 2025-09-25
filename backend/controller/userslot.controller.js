@@ -1,3 +1,4 @@
+const SendMail = require("../middleware/SendMail");
 const { ADDSLOTBYADMIN } = require("../modal/addslotbyadmin.modal");
 const { USERSLOT } = require("../modal/userslot.modal");
 
@@ -24,12 +25,19 @@ const UserAddSlot = async (req, res) => {
                 time: time
             }
         })
-        const data = await SaveData.save()
-        return res.send({
-            message: "Thanks For Booking!!!",
-            data: data,
-            statuscode: 200
-        })
+        const body = {
+            time: time,
+            date: date,
+            mail: email,
+            data: SaveData,
+
+        }
+        await SendMail(body, res)
+        // return res.send({
+        //     message: "Thanks For Booking!!!",
+        //     data: data,
+        //     statuscode: 200
+        // })
     }
 }
 /**************************************************  */
@@ -73,5 +81,7 @@ const userBookedSlot = async (req, res) => {
 
     }
 }
+
+// ********************************************* Fetch All 
 
 module.exports = { UserAddSlot, AvailableSlot, userBookedSlot }
