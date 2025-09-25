@@ -13,7 +13,8 @@ import { IoTimeOutline } from "react-icons/io5";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router";
+import { Navigate } from "react-router";
+import earthimg from "../../images/earth.png"
 export default function Index() {
     // *************************************
     const [TimeSlot, setTimeSlot] = useState([]);
@@ -21,7 +22,7 @@ export default function Index() {
     const [openBox, SetopenBox] = useState(true);
 
     // :::::::: fromik values
-    const navigate = useNavigate();
+    const [loading, setloading] = useState(false)
 
     /*********************** click on time color change  */
     const [clickTime, setclickTime] = useState("");
@@ -79,6 +80,7 @@ export default function Index() {
                 date: selectDate,
                 time: clickTime,
             };
+            setloading(true)
 
             AddSlot.mutate(finalValues);
         },
@@ -89,14 +91,14 @@ export default function Index() {
         onSuccess: (res) => {
             if (res?.data?.statuscode == 200) {
                 SetopenBox(true);
+                setTimeSlot([]);
+                formik.resetForm();
 
                 Swal.fire({
                     title: res?.data?.message,
                     icon: "success",
                 });
-                setTimeSlot([])
-                navigate("/")
-
+                <Navigate to={"/"} replace={true} />;
             } else {
                 Swal.fire({
                     title: res?.data?.message,
@@ -136,16 +138,22 @@ export default function Index() {
     console.log(clickTime, "asdfghjkl;");
     return (
         <>
-            <div className="container">
+            <div className="container pt-5">
+                <h1 className="text-center font-semibold">Get Schedual For Meeting</h1>
                 {openBox == true ? (
                     <div className="flex mt-5 flex-col md:flex-row bg-blend-darken bg-black p-3 rounded-2xl  h-full">
-                        <div className="w-full md:w-1/4 pt-4 ">
+                        <div className="w-full md:w-1/4 pt-3 ">
                             <h6 className="contact-text text-center txt-org font-semibold ">
                                 TriangleTech
                             </h6>
                             <h4 className="contact-text text-center text-red-50 font-semibold">
                                 Contact with us
                             </h4>
+                            <div className="image p-3">
+                                <img src={earthimg} className="img-rot" alt="" />
+                            </div>
+                            <p className="txt-org text-center font-semibold m-0">5WayDigit Solution Pvt Ltd</p>
+
                         </div>
                         {/* **********************************  Second coloumn */}
                         <div className="w-full md:w-1/2  border-r-2 border-l-2">
@@ -265,7 +273,7 @@ export default function Index() {
                             </div>
                             {/* **************** Next Button */}
                             <button
-                                className="px-4 font-semibold mt-3 py-2 bg-orange-400 float-end rounded "
+                                className="px-4 font-semibold mt-3 py-2 text-center m-auto flex items-center justify-center bg-orange-400 text-black rounded "
                                 onClick={() => {
                                     if (clickTime == "" || selectDate == "") {
                                         SetopenBox(true);
@@ -378,7 +386,7 @@ export default function Index() {
                                     className="bg-orange-400 font-semibold float-end me-2 mt-2 px-4 py-2 rounded "
                                     onClick={() => formik?.handleSubmit()}
                                 >
-                                    Submit
+                                    {loading ? "loading..." : "Submit"}
                                 </button>
                             </div>
                             {/* *************** end user  */}
@@ -388,8 +396,6 @@ export default function Index() {
             </div>
 
             {/* *********************************************************************************************************** */}
-
-
         </>
     );
 }

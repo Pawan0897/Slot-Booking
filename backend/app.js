@@ -11,17 +11,15 @@ const cors = require("cors");
 // const { log } = require('console');/
 var app = express();
 
-app.use(cors())
+app.use(cors({
+  origin: 'http://localhost:9090',
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 // ********************* Database Connected !!!
 db_connection();
 
-// check data change -----------
-// const change = db_connection.collection("slotadmin")
 
-// change.on("change", (change) => {
-//   console.log(change);
-
-// })
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

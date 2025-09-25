@@ -52,7 +52,7 @@ const SendMail = async (body, res) => {
             `,
         };
         /**************************** */
-        tranporter.sendMail(EmailOptions, async function (error, info) {
+        await tranporter.sendMail(EmailOptions, async function (error, info) {
             if (error) {
                 return res.send({
                     statuscode: 500,
